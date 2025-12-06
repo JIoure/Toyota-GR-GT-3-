@@ -97,6 +97,14 @@
         /* 隐藏滚动条但保留功能 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* --- 画廊样式 --- */
+        .gallery-img {
+            transition: transform 0.5s ease;
+        }
+        .gallery-item:hover .gallery-img {
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-red-100 selection:text-red-900">
@@ -113,6 +121,7 @@
                     <button onclick="scrollToSection('transmission')" class="text-gray-600 hover:text-red-600 transition-colors">动力传输</button>
                     <button onclick="scrollToSection('engine')" class="text-gray-600 hover:text-red-600 transition-colors">动力心脏</button>
                     <button onclick="scrollToSection('chassis')" class="text-gray-600 hover:text-red-600 transition-colors">车身制造</button>
+                    <button onclick="scrollToSection('gallery')" class="text-gray-600 hover:text-red-600 transition-colors">细节图赏</button>
                 </nav>
                 <button onclick="scrollToSection('ai-consultant')" class="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full text-sm font-bold transition-all shadow-md flex items-center gap-2">
                     <span>✨</span> 提问总工
@@ -167,11 +176,11 @@
                         GR GT3 采用了类似 AMG GT Black Series 的 Transaxle 布局，将变速箱置于后轴以平衡配重。它移除了效率低下的液力变矩器，取而代之的是<strong>湿式多片离合器 (MCT)</strong> 与 <strong>P2 混动模块</strong>。
                     </p>
                     
-                    <!-- ✨ 新增：变速箱结构示意图 -->
+                    <!-- ✨ 变速箱结构示意图 -->
                     <figure class="rounded-xl overflow-hidden border border-gray-200 shadow-sm mt-6 group cursor-zoom-in">
-                        <img src="https://placehold.co/600x350/e4e4e7/1f2937?text=Transaxle+Layout+Diagram" alt="Transaxle Layout" class="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105">
+                        <img src="./Gemini_Generated_Image_aj99czaj99czaj99.png" alt="Transaxle Layout Diagram" class="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.src='https://placehold.co/600x350/e4e4e7/1f2937?text=Image+Not+Found'">
                         <figcaption class="bg-gray-50 text-xs text-gray-500 p-2 text-center border-t border-gray-100">
-                            Transaxle 后置变速箱布局示意图 (P2电机位于发动机与变速箱之间)
+                            Transaxle 布局：发动机前置，变速箱后置，P2电机位于中间
                         </figcaption>
                     </figure>
                 </div>
@@ -213,9 +222,9 @@
                             <canvas id="engineRadarChart"></canvas>
                         </div>
                     </div>
-                    <!-- ✨ 新增：引擎实物示意图 -->
+                    <!-- ✨ 引擎实物图 -->
                     <figure class="rounded-xl overflow-hidden border border-gray-200 shadow-sm relative group">
-                        <img src="https://placehold.co/800x500/18181b/dc2626?text=4.0L+V8+Twin-Turbo+Unit" alt="V8 Engine" class="w-full h-64 object-cover">
+                        <img src="./1205-03_013.jpg" alt="4.0L V8 Twin-Turbo Unit" class="w-full h-64 object-cover" onerror="this.src='https://placehold.co/800x500/18181b/dc2626?text=Image+Not+Found'">
                         <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white font-mono text-sm duration-300">
                             [GR-FE V8 Prototype Unit]
                         </div>
@@ -229,7 +238,7 @@
                         <h2 class="text-3xl font-bold text-gray-900">动力心脏：4.0L V8 Twin-Turbo</h2>
                         <p class="text-gray-600 mt-4 leading-relaxed">
                             不同于 Ferrari 的平面曲轴 V8，丰田选择了<strong>十字曲轴</strong>。这种选择并非妥协，而是基于耐力赛与街道双重需求的深思熟虑。
-                            <br><span class="text-sm text-red-600 font-medium mt-2 block">👇 点击下方卡片查看技术详情：</span>
+                            <br><span class="text-sm text-red-600 font-medium mt-2 block">👇 点击下方卡片查看技术详情（含解析图）：</span>
                         </p>
                     </div>
                     
@@ -244,7 +253,7 @@
                                 <div class="ml-5 relative z-10">
                                     <h4 class="text-lg font-bold text-gray-900 flex items-center gap-2 group-hover:text-red-700 transition-colors">
                                         Hot V 布局 
-                                        <span class="text-[10px] font-normal border border-gray-200 bg-white px-2 py-0.5 rounded text-gray-500 group-hover:border-red-200 group-hover:text-red-600">点击查看大图</span>
+                                        <span class="text-[10px] font-normal border border-gray-200 bg-white px-2 py-0.5 rounded text-gray-500 group-hover:border-red-200 group-hover:text-red-600">点击查看架构图</span>
                                     </h4>
                                     <p class="text-sm text-gray-600 mt-1 pr-8">涡轮置于V型夹角内。缩短进气管路，极低涡轮迟滞，紧凑封装。</p>
                                 </div>
@@ -261,7 +270,7 @@
                                 <div class="ml-5 relative z-10">
                                     <h4 class="text-lg font-bold text-gray-900 flex items-center gap-2 group-hover:text-red-700 transition-colors">
                                         十字曲轴 (Cross-plane)
-                                        <span class="text-[10px] font-normal border border-gray-200 bg-white px-2 py-0.5 rounded text-gray-500 group-hover:border-red-200 group-hover:text-red-600">点击查看大图</span>
+                                        <span class="text-[10px] font-normal border border-gray-200 bg-white px-2 py-0.5 rounded text-gray-500 group-hover:border-red-200 group-hover:text-red-600">点击查看详解图</span>
                                     </h4>
                                     <p class="text-sm text-gray-600 mt-1 pr-8">二阶振动小，无需平衡轴。换来极佳的耐久性和浑厚的低扭声浪。</p>
                                 </div>
@@ -325,10 +334,10 @@
                         </ul>
                     </div>
 
-                    <!-- ✨ 新增：底部结构细节图 -->
+                    <!-- ✨ 白车身结构图 -->
                     <div class="mt-8 pt-6 border-t border-gray-700">
-                        <img src="https://placehold.co/500x200/3f3f46/ffffff?text=Aluminum+Structure+Cutaway" class="rounded opacity-70 w-full h-32 object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
-                        <p class="text-[10px] text-gray-500 mt-2 text-center uppercase tracking-widest">Structural Node Detail</p>
+                        <img src="./1205-03_009.jpg" alt="Body in White" class="rounded opacity-70 w-full h-32 object-cover grayscale group-hover:grayscale-0 transition-all duration-500" onerror="this.src='https://placehold.co/500x200/3f3f46/ffffff?text=Image+Not+Found'">
+                        <p class="text-[10px] text-gray-500 mt-2 text-center uppercase tracking-widest">铝合金白车身展示</p>
                     </div>
                 </div>
 
@@ -339,6 +348,93 @@
                         <canvas id="chassisBarChart"></canvas>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- ✨ 新增 Section: Visual Gallery (细节图赏) -->
+        <section id="gallery" class="scroll-mt-24 border-t border-gray-200 pt-24 pb-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="mb-12">
+                    <div class="inline-block px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold uppercase tracking-wide mb-2">Gallery</div>
+                    <h2 class="text-3xl font-bold text-gray-900">Visual Engineering | 可视化工程细节</h2>
+                    <p class="text-gray-600 mt-2">从空力套件到赛用座舱，每一个细节都为圈速而生。</p>
+                </div>
+
+                <!-- 空力组 -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 pl-3 border-l-4 border-red-600">Aerodynamics & Exterior</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="relative rounded-lg overflow-hidden h-48 group gallery-item cursor-pointer">
+                            <img src="./1205-03_032.jpg" class="w-full h-full object-cover gallery-img" alt="Front Aero">
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3">
+                                <span class="text-white text-xs font-mono">Front Aero / 车头空力</span>
+                            </div>
+                        </div>
+                        <div class="relative rounded-lg overflow-hidden h-48 group gallery-item cursor-pointer">
+                            <img src="./1205-03_031.jpg" class="w-full h-full object-cover gallery-img" alt="Side Aero">
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3">
+                                <span class="text-white text-xs font-mono">Side Profile / 车身侧面</span>
+                            </div>
+                        </div>
+                        <div class="relative rounded-lg overflow-hidden h-48 group gallery-item cursor-pointer">
+                            <img src="./1205-03_033.jpg" class="w-full h-full object-cover gallery-img" alt="Rear Aero">
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3">
+                                <span class="text-white text-xs font-mono">Rear Diffuser / 车尾空力</span>
+                            </div>
+                        </div>
+                        <div class="relative rounded-lg overflow-hidden h-48 group gallery-item cursor-pointer">
+                            <img src="./1205-03_026.jpg" class="w-full h-full object-cover gallery-img" alt="Side Vent">
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3">
+                                <span class="text-white text-xs font-mono">Wheel Arch Vent / 轮拱开孔</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 细节组 -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 pl-3 border-l-4 border-gray-800">Mechanical Details</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="relative rounded-lg overflow-hidden h-48 group gallery-item cursor-pointer">
+                                <img src="./1205-03_008.jpg" class="w-full h-full object-cover gallery-img" alt="Exhaust">
+                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3">
+                                    <span class="text-white text-xs font-mono">Side Exhaust / 侧排气</span>
+                                </div>
+                            </div>
+                            <div class="relative rounded-lg overflow-hidden h-48 group gallery-item cursor-pointer">
+                                <img src="./1205-03_024.jpg" class="w-full h-full object-cover gallery-img" alt="Brakes">
+                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3">
+                                    <span class="text-white text-xs font-mono">Racing Brakes / 赛用制动</span>
+                                </div>
+                            </div>
+                            <div class="relative rounded-lg overflow-hidden h-48 group gallery-item cursor-pointer col-span-2">
+                                <img src="./1205-03_025.jpg" class="w-full h-full object-cover gallery-img" alt="DRL">
+                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3">
+                                    <span class="text-white text-xs font-mono">Signature DRL / 日行灯细节</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 pl-3 border-l-4 border-red-600">Cockpit Interface</h3>
+                        <div class="space-y-4">
+                            <div class="relative rounded-lg overflow-hidden h-60 group gallery-item cursor-pointer">
+                                <img src="./1205-03_015.jpg" class="w-full h-full object-cover gallery-img" alt="Cluster">
+                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3">
+                                    <span class="text-white text-xs font-mono">Digital Dash / 赛用仪表中控</span>
+                                </div>
+                            </div>
+                            <div class="relative rounded-lg overflow-hidden h-40 group gallery-item cursor-pointer">
+                                <img src="./1205-03_030.jpg" class="w-full h-full object-cover gallery-img" alt="Pedals">
+                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3">
+                                    <span class="text-white text-xs font-mono">Pedal Box / 踏板组件</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </section>
 
@@ -578,7 +674,7 @@
             'hotv': {
                 title: 'Hot V 涡轮布局详解',
                 tag: 'THERMODYNAMICS',
-                image: 'https://placehold.co/800x400/7f1d1d/ffffff?text=Hot+V+Turbo+Configuration', 
+                image: './Gemini_Generated_Image_2vxa8b2vxa8b2vxa.png', 
                 description: `
                     <p><strong>原理：</strong>传统的 V8 引擎将进气侧置于 V 型夹角内，排气侧置于外侧。而 Hot V 布局颠覆了这一传统，将两个大型涡轮增压器直接放置在 90° V 型气缸夹角的中心。</p>
                     <div class="bg-red-50 p-4 rounded-lg my-4 border border-red-100">
@@ -594,7 +690,7 @@
             'crank': {
                 title: '十字曲轴 (Cross-plane) 哲学',
                 tag: 'MECHANICS',
-                image: 'https://placehold.co/800x400/374151/ffffff?text=Cross-plane+Crankshaft',
+                image: './Gemini_Generated_Image_rcvzr0rcvzr0rcvz.png',
                 description: `
                     <p><strong>为什么不用平面曲轴？</strong> 法拉利和迈凯伦使用平面曲轴（Flat-plane）是为了追求极致的排气干涉效率和高转速功率（9000rpm+），但代价是巨大的二阶振动，引擎像是在自我撕裂。</p>
                     <p>丰田 GR GT3 选择十字曲轴（Cross-plane），每 90 度一个曲拐：</p>
@@ -630,6 +726,7 @@
 
             document.getElementById('modal-title').innerText = data.title;
             document.getElementById('modal-tag').innerText = data.tag;
+            // 确保使用最新的图片路径
             document.getElementById('modal-img').src = data.image;
             document.getElementById('modal-desc').innerHTML = data.description;
 
