@@ -40,13 +40,17 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
         
-        /* 图片点击放大效果 */
+        /* 图片点击放大效果 - 全局应用 */
         .zoomable-img {
             cursor: zoom-in;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
         .zoomable-img:hover {
             opacity: 0.95;
+        }
+        /* 画廊特定悬停效果 */
+        .gallery-item:hover .zoomable-img {
+            transform: scale(1.05);
         }
 
         /* --- 聊天窗口样式 --- */
@@ -80,11 +84,11 @@
         .modal-enter #modal-backdrop, .modal-enter #lightbox-backdrop {
             opacity: 1;
         }
-        .modal-enter #modal-panel, .modal-enter #lightbox-img {
+        .modal-enter #modal-panel, .modal-enter #lightbox-container {
             opacity: 1;
             transform: translateY(0) scale(100%);
         }
-        #modal-backdrop, #modal-panel, #lightbox-backdrop, #lightbox-img {
+        #modal-backdrop, #modal-panel, #lightbox-backdrop, #lightbox-container {
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -105,14 +109,6 @@
         
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* --- 画廊样式 --- */
-        .gallery-img {
-            transition: transform 0.5s ease;
-        }
-        .gallery-item:hover .gallery-img {
-            transform: scale(1.05);
-        }
     </style>
 </head>
 <body class="antialiased selection:bg-red-100 selection:text-red-900">
@@ -182,11 +178,11 @@
                         GR GT3 采用了类似 AMG GT Black Series 的 Transaxle 布局，将变速箱置于后轴以平衡配重。它移除了效率低下的液力变矩器，取而代之的是<strong>湿式多片离合器 (MCT)</strong> 与 <strong>P2 混动模块</strong>。
                     </p>
                     
-                    <!-- ✨ 动力系统透视图 (更名为 1205-03_012.jpg) -->
+                    <!-- ✨ 动力系统透视图 (替换为新图片 1205-03_012.jpg) -->
                     <figure class="rounded-xl overflow-hidden border border-gray-200 shadow-sm mt-6 group">
                         <img src="./1205-03_012.jpg" alt="Drivetrain Perspective" class="zoomable-img w-full h-auto object-cover" onclick="openLightbox(this.src)">
                         <figcaption class="bg-gray-50 text-xs text-gray-500 p-2 text-center border-t border-gray-100">
-                            GR GT3 动力系统透视：V8 引擎前置，悬挂与后置变速箱电池布局一览无余
+                            GR GT3 动力系统透视：V8 引擎前置，传动轴贯穿，连接后置变速箱与电池布局
                         </figcaption>
                     </figure>
                 </div>
@@ -212,39 +208,41 @@
             </div>
         </section>
 
-        <!-- Section 2: Engine (Layout Refined) -->
+        <!-- Section 2: Engine (Layout Redesigned for better proportions) -->
         <section id="engine" class="scroll-mt-24 border-t border-gray-200 pt-24">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
                 
-                <!-- ✨ 布局优化：左侧改为大图展示，增加视觉冲击力 -->
-                <div class="lg:col-span-7 lg:order-1 order-2 space-y-6">
-                     <div class="inline-block px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold uppercase tracking-wide lg:hidden mb-2">Dimension 02</div>
-                    
-                    <!-- 引擎实物图 (放大展示) -->
-                    <figure class="rounded-xl overflow-hidden border border-gray-200 shadow-md relative group h-[400px]">
+                <!-- ✨ 布局重构：左侧完全留给大图，解决比例不协调问题 -->
+                <div class="lg:col-span-7 lg:order-1 order-2">
+                    <figure class="rounded-xl overflow-hidden border border-gray-200 shadow-xl relative group h-[500px] z-10">
                         <img src="./1205-03_013.jpg" alt="4.0L V8 Twin-Turbo Unit" class="zoomable-img w-full h-full object-cover" onclick="openLightbox(this.src)">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 flex flex-col justify-end p-6 pointer-events-none">
-                            <div class="text-white font-bold text-xl">GR-FE V8 Prototype Unit</div>
-                            <div class="text-gray-300 text-sm font-mono mt-1">Twin-Turbo / Hot-V / Cross-plane</div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none flex flex-col justify-end p-8">
+                            <div class="inline-block px-3 py-1 bg-red-600 text-white rounded-full text-xs font-bold uppercase tracking-wide mb-2 w-fit">Power Unit</div>
+                            <h3 class="text-white font-bold text-3xl mb-2">GR-FE V8 Prototype</h3>
+                            <p class="text-gray-300 font-mono text-sm">Twin-Turbo / Hot-V Configuration / Cross-plane Crank</p>
                         </div>
                     </figure>
+                </div>
 
-                    <!-- 雷达图 (缩小作为辅助展示) -->
-                    <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
+                <!-- 右侧：文本 + 雷达图 + 技术卡片 -->
+                <div class="lg:col-span-5 lg:order-2 order-1 space-y-6 flex flex-col justify-center">
+                    
+                    <!-- ✨ 雷达图移至此处，作为性能概览 -->
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4 mb-4">
                         <div class="flex-1">
-                            <h3 class="text-sm font-bold text-gray-900 mb-1">性能取向分析</h3>
-                            <p class="text-xs text-gray-500 leading-tight">GR V8 相比竞品更注重低扭与耐用性，牺牲了部分极高转速的功率输出。</p>
+                            <h4 class="text-sm font-bold text-gray-900 mb-1 flex items-center gap-2">
+                                <span class="w-2 h-2 bg-red-600 rounded-full"></span>
+                                性能取向：耐力优先
+                            </h4>
+                            <p class="text-xs text-gray-500 leading-relaxed">相比竞品 (灰色区域)，GR V8 (红色区域)牺牲了极高转速功率，换取了卓越的低扭响应、震动控制和长距离耐用性。</p>
                         </div>
-                        <div class="w-48 h-32 relative">
+                        <div class="w-40 h-32 relative flex-shrink-0">
                              <canvas id="engineRadarChart"></canvas>
                         </div>
                     </div>
-                </div>
 
-                <!-- 右侧：交互式技术细节卡片 -->
-                <div class="lg:col-span-5 lg:order-2 order-1 space-y-6">
                     <div>
-                        <div class="hidden lg:inline-block px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold uppercase tracking-wide mb-2">Dimension 02</div>
+                        <div class="inline-block px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold uppercase tracking-wide mb-2">Dimension 02</div>
                         <h2 class="text-3xl font-bold text-gray-900">动力心脏：4.0L V8 Twin-Turbo</h2>
                         <p class="text-gray-600 mt-4 leading-relaxed text-sm">
                             不同于 Ferrari 的平面曲轴 V8，丰田选择了<strong>十字曲轴</strong>。这种选择并非妥协，而是基于耐力赛与街道双重需求的深思熟虑。
@@ -253,7 +251,7 @@
                     
                     <div class="space-y-3">
                         <!-- 交互卡片 1: Hot V -->
-                        <button onclick="openDetailModal('hotv')" class="w-full text-left group relative overflow-hidden p-4 bg-white border border-gray-200 rounded-xl hover:border-red-500 hover:shadow-lg transition-all duration-300 tech-card">
+                        <button onclick="openDetailModal('hotv')" class="w-full text-left group relative overflow-hidden p-4 bg-white border border-gray-200 rounded-xl hover:border-red-500 hover:shadow-md transition-all duration-300 tech-card">
                             <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                                 <span class="text-6xl">🔥</span>
                             </div>
@@ -263,12 +261,12 @@
                                     <h4 class="text-base font-bold text-gray-900 group-hover:text-red-700 transition-colors">Hot V 布局</h4>
                                     <p class="text-xs text-gray-500 mt-0.5">涡轮置于V型夹角内，极低迟滞。</p>
                                 </div>
-                                <span class="text-[10px] text-gray-400 border border-gray-100 px-2 py-1 rounded">查看详情</span>
+                                <svg class="w-5 h-5 text-gray-300 group-hover:text-red-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </div>
                         </button>
 
                         <!-- 交互卡片 2: Cross-plane -->
-                        <button onclick="openDetailModal('crank')" class="w-full text-left group relative overflow-hidden p-4 bg-white border border-gray-200 rounded-xl hover:border-red-500 hover:shadow-lg transition-all duration-300 tech-card">
+                        <button onclick="openDetailModal('crank')" class="w-full text-left group relative overflow-hidden p-4 bg-white border border-gray-200 rounded-xl hover:border-red-500 hover:shadow-md transition-all duration-300 tech-card">
                             <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                                 <span class="text-6xl">⚙️</span>
                             </div>
@@ -278,12 +276,12 @@
                                     <h4 class="text-base font-bold text-gray-900 group-hover:text-red-700 transition-colors">十字曲轴 (Cross-plane)</h4>
                                     <p class="text-xs text-gray-500 mt-0.5">平顺耐用，浑厚的低扭声浪。</p>
                                 </div>
-                                <span class="text-[10px] text-gray-400 border border-gray-100 px-2 py-1 rounded">查看详情</span>
+                                <svg class="w-5 h-5 text-gray-300 group-hover:text-red-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </div>
                         </button>
 
                         <!-- 交互卡片 3: D-4S -->
-                        <button onclick="openDetailModal('injection')" class="w-full text-left group relative overflow-hidden p-4 bg-white border border-gray-200 rounded-xl hover:border-red-500 hover:shadow-lg transition-all duration-300 tech-card">
+                        <button onclick="openDetailModal('injection')" class="w-full text-left group relative overflow-hidden p-4 bg-white border border-gray-200 rounded-xl hover:border-red-500 hover:shadow-md transition-all duration-300 tech-card">
                              <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                                 <span class="text-6xl">💉</span>
                             </div>
@@ -293,7 +291,7 @@
                                     <h4 class="text-base font-bold text-gray-900 group-hover:text-red-700 transition-colors">D-4S 双喷射系统</h4>
                                     <p class="text-xs text-gray-500 mt-0.5">直喷+歧管喷射，燃烧稳定性。</p>
                                 </div>
-                                <span class="text-[10px] text-gray-400 border border-gray-100 px-2 py-1 rounded">查看详情</span>
+                                <svg class="w-5 h-5 text-gray-300 group-hover:text-red-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </div>
                         </button>
                     </div>
@@ -301,7 +299,7 @@
             </div>
         </section>
 
-        <!-- Section 3: Chassis (Layout Optimized) -->
+        <!-- Section 3: Chassis (Layout Optimized for proportions) -->
         <section id="chassis" class="scroll-mt-24 border-t border-gray-200 pt-24 pb-20">
             <div class="text-center max-w-3xl mx-auto mb-12">
                 <div class="inline-block px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold uppercase tracking-wide mb-4">Dimension 03</div>
@@ -312,11 +310,11 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-                <!-- 左侧：概念解释卡片 + 爆炸图 -->
-                <div class="bg-zinc-900 text-white p-8 rounded-xl shadow-lg relative overflow-hidden flex flex-col justify-between group h-full">
+                <!-- 左侧：概念解释卡片 + 结构图堆叠 -->
+                <div class="bg-zinc-900 text-white p-8 rounded-xl shadow-lg relative overflow-hidden flex flex-col group h-full">
                     <div class="absolute top-0 right-0 -mr-8 -mt-8 w-40 h-40 bg-red-600 rounded-full opacity-20 blur-3xl group-hover:opacity-30 transition-opacity"></div>
                     
-                    <div>
+                    <div class="mb-8">
                         <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
                             <span class="w-1 h-6 bg-red-600 block"></span>
                             铝合金车身工艺解析
@@ -333,13 +331,23 @@
                         </ul>
                     </div>
 
-                    <!-- ✨ 布局优化：增加图片展示高度，解决比例问题 -->
-                    <div class="mt-8 pt-6 border-t border-gray-700">
-                        <div class="grid grid-cols-2 gap-2">
-                            <img src="./1205-03_010.jpg" alt="Body Exploded View" class="zoomable-img rounded opacity-80 w-full h-40 object-cover grayscale group-hover:grayscale-0 transition-all duration-500" onclick="openLightbox(this.src)">
-                            <img src="./1205-03_009.jpg" alt="Body in White" class="zoomable-img rounded opacity-60 w-full h-40 object-cover grayscale group-hover:grayscale-0 transition-all duration-500" onclick="openLightbox(this.src)">
+                    <!-- ✨ 布局优化：使用 aspect-video 垂直堆叠，解决比例问题，并加入新图片 -->
+                    <div class="mt-auto space-y-4 pt-6 border-t border-gray-700">
+                        <div class="relative aspect-video rounded-lg overflow-hidden bg-zinc-800 group/img">
+                            <img src="./1205-03_010.jpg" alt="Body Exploded View" class="zoomable-img w-full h-full object-cover opacity-90 group-hover/img:opacity-100 transition-opacity" onclick="openLightbox(this.src)">
+                            <div class="absolute bottom-2 left-2 text-[10px] uppercase tracking-widest text-white/70 bg-black/50 px-2 py-1 rounded">爆炸视图 (Exploded View)</div>
                         </div>
-                        <p class="text-[10px] text-gray-500 mt-2 text-center uppercase tracking-widest">车身蒙皮与白车身结构 (点击放大)</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="relative aspect-video rounded-lg overflow-hidden bg-zinc-800 group/img">
+                                <img src="./1205-03_009.jpg" alt="Body in White" class="zoomable-img w-full h-full object-cover opacity-70 grayscale group-hover/img:grayscale-0 group-hover/img:opacity-100 transition-all" onclick="openLightbox(this.src)">
+                                <div class="absolute bottom-2 left-2 text-[10px] uppercase tracking-widest text-white/70 bg-black/50 px-2 py-1 rounded">白车身 (BiW)</div>
+                            </div>
+                            <div class="relative aspect-video rounded-lg overflow-hidden bg-zinc-800 group/img">
+                                <!-- 这里放置一个结构细节图的占位，您可以用其他图片替换 -->
+                                <img src="https://placehold.co/500x300/3f3f46/ffffff?text=Structural+Node" alt="Structure Detail" class="zoomable-img w-full h-full object-cover opacity-70 grayscale group-hover/img:grayscale-0 group-hover/img:opacity-100 transition-all" onclick="openLightbox(this.src)">
+                                <div class="absolute bottom-2 left-2 text-[10px] uppercase tracking-widest text-white/70 bg-black/50 px-2 py-1 rounded">结构节点 (Node)</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -353,7 +361,7 @@
             </div>
         </section>
 
-        <!-- Visual Gallery (细节图赏) -->
+        <!-- Visual Gallery (细节图赏 - 全面更新) -->
         <section id="gallery" class="scroll-mt-24 border-t border-gray-200 pt-24 pb-20 bg-white">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="mb-12">
@@ -366,25 +374,25 @@
                 <div class="mb-8">
                     <h3 class="text-lg font-bold text-gray-900 mb-4 pl-3 border-l-4 border-red-600">Aerodynamics & Exterior</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div class="relative rounded-lg overflow-hidden h-48 group cursor-zoom-in">
+                        <div class="relative rounded-lg overflow-hidden h-48 group gallery-item">
                             <img src="./1205-03_032.jpg" class="zoomable-img w-full h-full object-cover" alt="Front Aero" onclick="openLightbox(this.src)">
                             <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3 pointer-events-none">
                                 <span class="text-white text-xs font-mono">Front Aero / 车头空力</span>
                             </div>
                         </div>
-                        <div class="relative rounded-lg overflow-hidden h-48 group cursor-zoom-in">
+                        <div class="relative rounded-lg overflow-hidden h-48 group gallery-item">
                             <img src="./1205-03_031.jpg" class="zoomable-img w-full h-full object-cover" alt="Side Aero" onclick="openLightbox(this.src)">
                             <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3 pointer-events-none">
                                 <span class="text-white text-xs font-mono">Side Profile / 车身侧面</span>
                             </div>
                         </div>
-                        <div class="relative rounded-lg overflow-hidden h-48 group cursor-zoom-in">
+                        <div class="relative rounded-lg overflow-hidden h-48 group gallery-item">
                             <img src="./1205-03_033.jpg" class="zoomable-img w-full h-full object-cover" alt="Rear Aero" onclick="openLightbox(this.src)">
                             <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3 pointer-events-none">
                                 <span class="text-white text-xs font-mono">Rear Diffuser / 车尾空力</span>
                             </div>
                         </div>
-                        <div class="relative rounded-lg overflow-hidden h-48 group cursor-zoom-in">
+                        <div class="relative rounded-lg overflow-hidden h-48 group gallery-item">
                             <img src="./1205-03_026.jpg" class="zoomable-img w-full h-full object-cover" alt="Side Vent" onclick="openLightbox(this.src)">
                             <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3 pointer-events-none">
                                 <span class="text-white text-xs font-mono">Wheel Arch Vent / 轮拱开孔</span>
@@ -393,44 +401,44 @@
                     </div>
                 </div>
 
-                <!-- 驾驶舱 & 细节 -->
+                <!-- 驾驶舱 & 细节 (加入新图片) -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div>
                         <h3 class="text-lg font-bold text-gray-900 mb-4 pl-3 border-l-4 border-gray-800">Cockpit Interface</h3>
                         <div class="grid grid-cols-2 gap-4">
-                            <!-- ✨ 新增：低坐姿透视 -->
-                            <div class="relative rounded-lg overflow-hidden h-40 group cursor-zoom-in col-span-2">
+                            <!-- ✨ 新增：低坐姿透视 (1205-03_011.jpg) -->
+                            <div class="relative rounded-lg overflow-hidden h-48 group gallery-item col-span-2">
                                 <img src="./1205-03_011.jpg" class="zoomable-img w-full h-full object-cover" alt="Low Seating Position" onclick="openLightbox(this.src)">
                                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3 pointer-events-none">
-                                    <span class="text-white text-xs font-mono">Driver Position / 超低重心坐姿</span>
+                                    <span class="text-white text-xs font-mono">Driver Position / 超低重心坐姿透视</span>
                                 </div>
                             </div>
                             <!-- 仪表 -->
-                            <div class="relative rounded-lg overflow-hidden h-40 group cursor-zoom-in">
+                            <div class="relative rounded-lg overflow-hidden h-40 group gallery-item">
                                 <img src="./1205-03_015.jpg" class="zoomable-img w-full h-full object-cover" alt="Cluster" onclick="openLightbox(this.src)">
                                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3 pointer-events-none">
                                     <span class="text-white text-xs font-mono">Digital Dash / 赛用仪表</span>
                                 </div>
                             </div>
-                            <!-- ✨ 新增：座椅 -->
-                            <div class="relative rounded-lg overflow-hidden h-40 group cursor-zoom-in">
+                            <!-- ✨ 新增：座椅 (1205-03_029.jpg) -->
+                            <div class="relative rounded-lg overflow-hidden h-40 group gallery-item">
                                 <img src="./1205-03_029.jpg" class="zoomable-img w-full h-full object-cover" alt="Racing Seat" onclick="openLightbox(this.src)">
                                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3 pointer-events-none">
-                                    <span class="text-white text-xs font-mono">Bucket Seat / 桶椅细节</span>
+                                    <span class="text-white text-xs font-mono">Racing Bucket Seat / 赛用桶椅</span>
                                 </div>
                             </div>
                              <!-- 踏板 -->
-                             <div class="relative rounded-lg overflow-hidden h-40 group cursor-zoom-in">
+                             <div class="relative rounded-lg overflow-hidden h-40 group gallery-item">
                                 <img src="./1205-03_030.jpg" class="zoomable-img w-full h-full object-cover" alt="Pedals" onclick="openLightbox(this.src)">
                                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3 pointer-events-none">
-                                    <span class="text-white text-xs font-mono">Pedal Box / 踏板</span>
+                                    <span class="text-white text-xs font-mono">Pedal Box / 踏板组件</span>
                                 </div>
                             </div>
-                            <!-- ✨ 新增：扶手/中控 -->
-                            <div class="relative rounded-lg overflow-hidden h-40 group cursor-zoom-in">
+                            <!-- ✨ 新增：扶手/中控 (1205-03_028.jpg) -->
+                            <div class="relative rounded-lg overflow-hidden h-40 group gallery-item">
                                 <img src="./1205-03_028.jpg" class="zoomable-img w-full h-full object-cover" alt="Center Console" onclick="openLightbox(this.src)">
                                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3 pointer-events-none">
-                                    <span class="text-white text-xs font-mono">Center Control / 中控布局</span>
+                                    <span class="text-white text-xs font-mono">Center Control / 中控区域</span>
                                 </div>
                             </div>
                         </div>
@@ -439,22 +447,22 @@
                     <div>
                         <h3 class="text-lg font-bold text-gray-900 mb-4 pl-3 border-l-4 border-red-600">Mechanical Details</h3>
                          <div class="grid grid-cols-2 gap-4">
-                            <div class="relative rounded-lg overflow-hidden h-48 group cursor-zoom-in">
+                            <div class="relative rounded-lg overflow-hidden h-48 group gallery-item">
                                 <img src="./1205-03_008.jpg" class="zoomable-img w-full h-full object-cover" alt="Exhaust" onclick="openLightbox(this.src)">
                                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3 pointer-events-none">
-                                    <span class="text-white text-xs font-mono">Side Exhaust / 侧排气</span>
+                                    <span class="text-white text-xs font-mono">Side Exhaust / 侧排气口</span>
                                 </div>
                             </div>
-                            <div class="relative rounded-lg overflow-hidden h-48 group cursor-zoom-in">
+                            <div class="relative rounded-lg overflow-hidden h-48 group gallery-item">
                                 <img src="./1205-03_024.jpg" class="zoomable-img w-full h-full object-cover" alt="Brakes" onclick="openLightbox(this.src)">
                                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3 pointer-events-none">
-                                    <span class="text-white text-xs font-mono">Racing Brakes / 赛用制动</span>
+                                    <span class="text-white text-xs font-mono">Racing Brakes / 赛用制动系统</span>
                                 </div>
                             </div>
-                            <div class="relative rounded-lg overflow-hidden h-48 group cursor-zoom-in col-span-2">
+                            <div class="relative rounded-lg overflow-hidden h-48 group gallery-item col-span-2">
                                 <img src="./1205-03_025.jpg" class="zoomable-img w-full h-full object-cover" alt="DRL" onclick="openLightbox(this.src)">
                                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3 pointer-events-none">
-                                    <span class="text-white text-xs font-mono">Signature DRL / 日行灯细节</span>
+                                    <span class="text-white text-xs font-mono">Signature DRL / 标志性日行灯</span>
                                 </div>
                             </div>
                         </div>
@@ -535,9 +543,10 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
                 <div class="relative h-56 sm:h-72 w-full bg-gray-100 flex-shrink-0">
-                    <img id="modal-img" src="" alt="Tech Detail" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                    <div class="absolute bottom-6 left-6 sm:left-8 pr-8">
+                    <!-- 模态框图片也支持点击放大 -->
+                    <img id="modal-img" src="" alt="Tech Detail" class="zoomable-img w-full h-full object-cover" onclick="openLightbox(this.src)">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none"></div>
+                    <div class="absolute bottom-6 left-6 sm:left-8 pr-8 pointer-events-none">
                         <span id="modal-tag" class="inline-block px-2 py-1 bg-red-600 text-white text-[10px] font-bold tracking-widest uppercase rounded mb-2 shadow-sm">Engineering</span>
                         <h3 id="modal-title" class="text-2xl sm:text-3xl font-bold text-white tracking-tight text-shadow-sm">Technical Title</h3>
                     </div>
@@ -549,11 +558,13 @@
         </div>
     </div>
 
-    <!-- ✨ Lightbox Modal (For Zooming Images) -->
-    <div id="lightbox-modal" class="fixed inset-0 z-[110] hidden items-center justify-center" onclick="closeLightbox()">
-        <div class="fixed inset-0 bg-black/90 backdrop-blur-md transition-opacity opacity-0" id="lightbox-backdrop"></div>
-        <img id="lightbox-img" src="" class="relative z-20 max-h-[95vh] max-w-[95vw] rounded shadow-2xl transition-all scale-95 opacity-0 object-contain">
-        <button class="absolute top-4 right-4 z-30 text-white/50 hover:text-white transition-colors">
+    <!-- ✨ Global Lightbox Modal (全屏图片放大) -->
+    <div id="lightbox-modal" class="fixed inset-0 z-[110] hidden items-center justify-center p-4" onclick="closeLightbox()">
+        <div class="fixed inset-0 bg-black/95 backdrop-blur-md transition-opacity opacity-0" id="lightbox-backdrop"></div>
+        <div class="relative z-20 transition-all scale-95 opacity-0 flex justify-center items-center w-full h-full" id="lightbox-container">
+            <img id="lightbox-img" src="" class="max-h-full max-w-full object-contain rounded-lg shadow-2xl">
+        </div>
+        <button class="absolute top-4 right-4 z-30 p-2 text-white/70 hover:text-white transition-colors bg-black/20 rounded-full">
              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
     </div>
@@ -563,7 +574,7 @@
         const md = window.markdownit();
 
         // ---------------------------------------------------------
-        // 1. Lightbox Logic (New Feature)
+        // 1. Global Lightbox Logic (点击放大功能)
         // ---------------------------------------------------------
         function openLightbox(src) {
             const modal = document.getElementById('lightbox-modal');
@@ -585,9 +596,20 @@
             setTimeout(() => {
                 modal.classList.remove('flex');
                 modal.classList.add('hidden');
+                document.getElementById('lightbox-img').src = ''; // Clear source
             }, 300);
             document.body.style.overflow = '';
         }
+
+        // Esc 键关闭 Lightbox
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                 if (!document.getElementById('lightbox-modal').classList.contains('hidden')) {
+                     closeLightbox();
+                 }
+            }
+        });
+
 
         // ---------------------------------------------------------
         // 2. Navigation & UI Logic
@@ -630,7 +652,7 @@
                 }
             });
 
-            // B. Engine Radar Chart
+            // B. Engine Radar Chart (精简版)
             const engineCtx = document.getElementById('engineRadarChart').getContext('2d');
             new Chart(engineCtx, {
                 type: 'radar',
@@ -642,13 +664,23 @@
                         fill: true,
                         backgroundColor: 'rgba(220, 38, 38, 0.2)',
                         borderColor: '#dc2626',
-                        pointBackgroundColor: '#dc2626'
+                        pointBackgroundColor: '#dc2626',
+                        pointBorderColor: '#fff'
+                    },
+                    {
+                        label: 'Competitor (Flat-plane)',
+                        data: [60, 95, 60, 60, 50],
+                        fill: true,
+                        backgroundColor: 'rgba(156, 163, 175, 0.2)',
+                        borderColor: '#9ca3af',
+                        pointBackgroundColor: '#9ca3af',
+                        pointBorderColor: '#fff'
                     }]
                 },
                 options: { 
                     responsive: true, 
                     maintainAspectRatio: false, 
-                    scales: { r: { suggestedMin: 0, suggestedMax: 100, ticks: { display: false } } },
+                    scales: { r: { suggestedMin: 0, suggestedMax: 100, ticks: { display: false, maxTicksLimit: 3 }, pointLabels: { font: { size: 10 } } } },
                     plugins: { legend: { display: false } }
                 }
             });
@@ -713,7 +745,7 @@
         }
 
         // ---------------------------------------------------------
-        // 4. Detail Modal Logic (Pop-up)
+        // 4. Detail Modal Logic (Pop-up for Tech Cards)
         // ---------------------------------------------------------
         const techDetails = {
             'hotv': {
@@ -772,6 +804,7 @@
 
             document.getElementById('modal-title').innerText = data.title;
             document.getElementById('modal-tag').innerText = data.tag;
+            // 确保使用最新的图片路径
             document.getElementById('modal-img').src = data.image;
             document.getElementById('modal-desc').innerHTML = data.description;
 
@@ -817,7 +850,7 @@
             if (!query) return;
             
             if (!apiKey) {
-                addMessageToChat('ai', '⚠️ 请先在代码中配置您的 Google API Key (line 462)');
+                addMessageToChat('ai', '⚠️ 请先在代码中配置您的 Google API Key (line 588)');
                 return;
             }
 
