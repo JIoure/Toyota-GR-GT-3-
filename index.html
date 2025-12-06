@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GR GT3 深度工程解析 | Deep Engineering Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
+    <style>
+        /* Custom Font for Technical Feel */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f4f4f5; /* Light zinc background */
+            color: #18181b; /* Zinc 900 */
+        }
+
+        .font-mono {
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        /* Chart Container Strict Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 350px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Utility for Diagram Boxes */
+        .tech-box {
+            transition: all 0.3s ease;
+        }
+        .tech-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Hide scrollbar for cleaner horizontal scrolling areas if any */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Chat UI Specifics */
+        .chat-bubble {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .chat-user {
+            background-color: #e4e4e7; /* Zinc 200 */
+            color: #18181b;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+        .chat-ai {
+            background-color: #fef2f2; /* Red 50 */
+            border: 1px solid #fee2e2;
+            color: #7f1d1d; /* Red 900 */
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+        .typing-dot {
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+    </style>
+    <!-- Chosen Palette: Technical Blueprint - Warm Neutrals (Background), Toyota Red (Accent), Dark Slate (Text) -->
+    <!-- Application Structure Plan: 
+         The app is structured as a vertical scrolling narrative divided into three engineering "Dimensions" (Engine, Transmission, Chassis).
+         ... (Existing Structure) ...
+         NEW: "AI Chief Engineer Consultation" section added at the bottom.
+    -->
+    <!-- Visualization & Content Choices:
+         ... (Existing Choices) ...
+         NEW: AI Chat Interface -> Goal: Allow deep-dive Q&A. Viz -> Chat bubbles. Interaction -> Gemini API integration.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="antialiased selection:bg-red-100 selection:text-red-900">
+
+    <!-- Navigation / Header -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl font-bold tracking-tighter text-black">GR <span class="text-red-600">GT3</span></span>
+                    <span class="hidden sm:block text-xs uppercase tracking-widest text-gray-500 border-l pl-2 ml-2 border-gray-300">Engineering Analysis</span>
+                </div>
+                <nav class="flex space-x-4 text-sm font-medium">
+                    <button onclick="scrollToSection('transmission')" class="text-gray-600 hover:text-red-600 transition-colors">动力传输</button>
+                    <button onclick="scrollToSection('engine')" class="text-gray-600 hover:text-red-600 transition-colors">动力心脏</button>
+                    <button onclick="scrollToSection('chassis')" class="text-gray-600 hover:text-red-600 transition-colors">车身制造</button>
+                    <button onclick="scrollToSection('ai-consultant')" class="text-red-600 font-bold hover:text-red-800 transition-colors flex items-center gap-1">
+                        <span>✨</span> 提问 AI 工程师
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-zinc-50 border-b border-gray-200 py-12 sm:py-20">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight mb-4">
+                过度工程的美学<br><span class="text-red-600">The Aesthetics of Over-Engineering</span>
+            </h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                "能开着去赛道，跑完比赛还能开回家。" <br>
+                深度拆解 GR GT3 概念车的技术内核：从后置混动 8AT 到 4.0L V8 双涡轮，以及向 Modena 致敬的砂芯铸造工艺。
+            </p>
+            <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto text-left">
+                <div class="bg-white p-4 border-l-4 border-red-600 shadow-sm tech-box">
+                    <div class="text-xs font-bold text-gray-400 uppercase mb-1">Transmission</div>
+                    <div class="font-bold text-gray-800">Transaxle 8AT</div>
+                    <div class="text-sm text-gray-500 mt-1">取消液力变矩器，P2电机扭矩填充</div>
+                </div>
+                <div class="bg-white p-4 border-l-4 border-gray-800 shadow-sm tech-box">
+                    <div class="text-xs font-bold text-gray-400 uppercase mb-1">Engine</div>
+                    <div class="font-bold text-gray-800">Hot-V V8</div>
+                    <div class="text-sm text-gray-500 mt-1">十字曲轴，D-4S双喷射，干式油底壳</div>
+                </div>
+                <div class="bg-white p-4 border-l-4 border-gray-400 shadow-sm tech-box">
+                    <div class="text-xs font-bold text-gray-400 uppercase mb-1">Chassis</div>
+                    <div class="font-bold text-gray-800">Sand Core Casting</div>
+                    <div class="text-sm text-gray-500 mt-1">高刚性铝合金硬点，模块化设计</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-24">
+
+        <!-- Section 1: Transmission -->
+        <section id="transmission" class="scroll-mt-24">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <!-- Text Content -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="inline-block px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold uppercase tracking-wide">Dimension 01</div>
+                    <h2 class="text-3xl font-bold text-gray-900">动力传输：后置混动 8AT (Transaxle)</h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        GR GT3 采用了类似 AMG GT Black Series 的布局，移除了效率低下的液力变矩器，取而代之的是<strong>湿式多片离合器 (MCT)</strong> 与 <strong>P2 混动模块</strong>。
+                    </p>
+                    <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm space-y-4">
+                        <h3 class="font-bold text-gray-900 border-b pb-2">技术核心：扭矩填充 (Torque Fill)</h3>
+                        <p class="text-sm text-gray-600">
+                            传统 AT 或 DCT 在换挡间隙会有动力中断。GR GT3 利用 P2 电机在发动机切断动力的瞬间（约 100-200ms）爆发扭矩，填补动力真空，实现无缝加速。
+                        </p>
+                        <div class="flex items-center space-x-2 text-sm text-gray-500 bg-gray-50 p-3 rounded">
+                            <span class="text-xl">⚡</span>
+                            <span>点击右侧图表按钮，模拟“有/无”电机介入的区别。</span>
+                        </div>
+                    </div>
+                    
+                    <!-- CSS Block Diagram for Transaxle Layout -->
+                    <div class="mt-6">
+                        <h4 class="text-sm font-bold text-gray-500 uppercase mb-3 tracking-wider">Transaxle 布局示意</h4>
+                        <div class="flex flex-col sm:flex-row items-center gap-2 text-xs font-mono text-center">
+                            <div class="flex-1 w-full bg-gray-200 p-2 rounded border border-gray-300">
+                                发动机<br>(Engine V8)
+                            </div>
+                            <div class="text-gray-400">➜</div>
+                            <div class="flex-1 w-full bg-gray-800 text-white p-2 rounded border border-gray-700 relative group cursor-help">
+                                P2电机<br>+ 离合器
+                                <div class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-32 bg-black text-white p-2 rounded text-xs hidden group-hover:block z-10">
+                                    辅助起步 & 换挡扭矩填充
+                                </div>
+                            </div>
+                            <div class="text-gray-400">➜</div>
+                            <div class="flex-1 w-full bg-gray-200 p-2 rounded border border-gray-300">
+                                8速 AT<br>(Planetary)
+                            </div>
+                            <div class="text-gray-400">➜</div>
+                            <div class="flex-1 w-full bg-red-50 p-2 rounded border border-red-200 text-red-800">
+                                机械 LSD<br>(Diff)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Visualization -->
+                <div class="lg:col-span-7 bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-center">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-gray-900">换挡扭矩填充模拟</h3>
+                        <div class="flex space-x-2">
+                            <button onclick="updateTorqueChart(false)" class="px-3 py-1 text-sm rounded bg-gray-100 hover:bg-gray-200 text-gray-700 transition">普通模式 (ICE Only)</button>
+                            <button onclick="updateTorqueChart(true)" class="px-3 py-1 text-sm rounded bg-red-600 hover:bg-red-700 text-white transition shadow-sm">GR 混动模式 (Hybrid)</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="torqueChart"></canvas>
+                    </div>
+                    <p id="torque-desc" class="mt-4 text-center text-sm text-gray-500 italic">
+                        当前展示：普通模式。注意换挡时的扭矩跌落（顿挫感）。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Engine -->
+        <section id="engine" class="scroll-mt-24 border-t border-gray-200 pt-24">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <!-- Interactive Visualization (Left Side this time) -->
+                <div class="lg:col-span-6 lg:order-1 order-2 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="mb-6">
+                        <h3 class="text-lg font-bold text-gray-900 text-center">十字曲轴 vs 平面曲轴</h3>
+                        <p class="text-xs text-center text-gray-500 mt-1">Toyota GR V8 (Cross-plane) vs. Typical Supercar (Flat-plane)</p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="engineRadarChart"></canvas>
+                    </div>
+                    <div class="mt-4 grid grid-cols-2 gap-4 text-center text-sm">
+                        <div class="p-2 bg-red-50 rounded text-red-800 font-medium">
+                            GR V8 (红色)
+                            <div class="text-xs font-normal text-red-600 mt-1">全域耐用，低扭充沛，隆隆声浪</div>
+                        </div>
+                        <div class="p-2 bg-gray-50 rounded text-gray-600 font-medium">
+                            竞品 V8 (灰色)
+                            <div class="text-xs font-normal text-gray-500 mt-1">高转尖啸，震动大，维护频次高</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Content -->
+                <div class="lg:col-span-6 lg:order-2 order-1 space-y-6">
+                    <div class="inline-block px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold uppercase tracking-wide">Dimension 02</div>
+                    <h2 class="text-3xl font-bold text-gray-900">动力心脏：4.0L V8 Twin-Turbo (Hot V)</h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        不同于 Ferrari 或 McLaren 追求极致高转的平面曲轴 V8，丰田选择了<strong>十字曲轴 (Cross-plane)</strong>。这种选择并非妥协，而是基于耐力赛与街道双重需求的深思熟虑。
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <!-- Feature Cards -->
+                        <div class="flex items-start p-4 bg-white border border-gray-200 rounded-lg hover:border-red-300 transition-colors cursor-pointer" onclick="highlightEngineFeature('hotv')">
+                            <div class="flex-shrink-0 h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center text-lg">🔥</div>
+                            <div class="ml-4">
+                                <h4 class="text-base font-bold text-gray-900">Hot V 布局</h4>
+                                <p class="text-sm text-gray-600 mt-1">涡轮置于V型夹角内。缩短进气管路，极低涡轮迟滞，但对散热要求极高。</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start p-4 bg-white border border-gray-200 rounded-lg hover:border-red-300 transition-colors cursor-pointer" onclick="highlightEngineFeature('crank')">
+                            <div class="flex-shrink-0 h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center text-lg">⚙️</div>
+                            <div class="ml-4">
+                                <h4 class="text-base font-bold text-gray-900">十字曲轴 (Cross-plane)</h4>
+                                <p class="text-sm text-gray-600 mt-1">二阶振动小，无需复杂的平衡轴。虽然极限转速略低，但换来了极佳的耐久性和低扭。</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start p-4 bg-white border border-gray-200 rounded-lg hover:border-red-300 transition-colors cursor-pointer" onclick="highlightEngineFeature('injection')">
+                            <div class="flex-shrink-0 h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center text-lg">💉</div>
+                            <div class="ml-4">
+                                <h4 class="text-base font-bold text-gray-900">D-4S 双喷射系统</h4>
+                                <p class="text-sm text-gray-600 mt-1">直喷+歧管喷射。即便作为超跑，丰田也考虑到了长期使用的积碳清洗和低负荷燃烧稳定性。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Chassis -->
+        <section id="chassis" class="scroll-mt-24 border-t border-gray-200 pt-24 pb-20">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <div class="inline-block px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold uppercase tracking-wide mb-4">Dimension 03</div>
+                <h2 class="text-3xl font-bold text-gray-900">车身制造：砂芯铸造 (Sand Core Casting)</h2>
+                <p class="text-gray-600 mt-4">
+                    为什么不选全碳纤维单体壳？丰田通过砂芯铸造技术，在关键“硬点”（避震塔顶、悬挂连接处）实现了生物骨骼般的复杂中空结构，向法拉利 Modena 的铝合金工艺致敬。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Concept Explanation -->
+                <div class="bg-zinc-900 text-white p-8 rounded-xl shadow-lg relative overflow-hidden">
+                    <div class="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 bg-red-600 rounded-full opacity-10 blur-2xl"></div>
+                    <h3 class="text-xl font-bold mb-4">砂芯铸造优势解析</h3>
+                    <ul class="space-y-4 text-sm text-gray-300">
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2">●</span>
+                            <div>
+                                <strong class="text-white">类生物结构：</strong>
+                                可以在铝件内部设计复杂的加强筋 (Ribs)，外部保持平滑。刚性/重量比极高。
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2">●</span>
+                            <div>
+                                <strong class="text-white">硬点集成 (Hard Points)：</strong>
+                                减少焊接点。将避震塔顶、悬挂摆臂点一体成型，消除应力集中。
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2">●</span>
+                            <div>
+                                <strong class="text-white">可修复性：</strong>
+                                相比撞击即报废的碳纤维单体壳，铝合金结构在 GT3 赛事碰撞中更易于更换和维修。
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Comparative Chart -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-center">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 text-center">车身工艺综合评分</h3>
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas id="chassisBarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Section: Gemini Powered AI Chief Engineer -->
+        <section id="ai-consultant" class="scroll-mt-24 border-t border-gray-200 pt-16 pb-12 bg-red-50">
+            <div class="max-w-4xl mx-auto px-4">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold uppercase tracking-wide mb-3">
+                        <span>✨</span> Gemini Powered
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900">AI 首席工程师咨询台</h2>
+                    <p class="text-gray-600 mt-2">
+                        对 GR GT3 的技术细节还有疑问？直接向我们的 AI 虚拟总工程师提问。
+                        <br><span class="text-sm opacity-75">无论是关于“干式油底壳”还是“P2电机”，它都能解答。</span>
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg border border-red-100 overflow-hidden flex flex-col h-[500px]">
+                    <!-- Chat History -->
+                    <div id="chat-history" class="flex-1 overflow-y-auto p-6 flex flex-col bg-zinc-50 border-b border-gray-100">
+                        <!-- Initial Message -->
+                        <div class="chat-bubble chat-ai">
+                            <strong>👨‍🔧 首席工程师:</strong><br>
+                            你好！我是 GR GT3 项目的技术顾问。关于这台车的任何工程细节——无论是 V8 引擎、后置变速箱，还是底盘铸造工艺，尽管问我。
+                        </div>
+                    </div>
+
+                    <!-- Input Area -->
+                    <div class="p-4 bg-white">
+                        <div class="flex gap-2">
+                            <input type="text" id="user-input" 
+                                class="flex-1 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+                                placeholder="例如：为什么要使用十字曲轴？..."
+                                onkeypress="if(event.key === 'Enter') askChiefEngineer()">
+                            <button onclick="askChiefEngineer()" 
+                                class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition-colors flex items-center gap-2 whitespace-nowrap shadow-md">
+                                <span>✨</span> 提问
+                            </button>
+                        </div>
+                        <div class="mt-2 flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                            <button onclick="fillPrompt('解释一下 Torque Fill 扭矩填充的原理')" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1 rounded-full whitespace-nowrap transition">⚡ 什么是扭矩填充？</button>
+                            <button onclick="fillPrompt('Hot V 布局有什么优缺点？')" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1 rounded-full whitespace-nowrap transition">🔥 Hot V 布局优缺点</button>
+                            <button onclick="fillPrompt('砂芯铸造相比碳纤维有什么优势？')" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1 rounded-full whitespace-nowrap transition">🛠️ 砂芯铸造 vs 碳纤维</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-900 text-white py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 class="text-2xl font-bold mb-4">GR GT3 Concept</h2>
+            <p class="text-gray-400 text-sm max-w-2xl mx-auto">
+                这不仅仅是一辆赛车，这是丰田对内燃机时代最后的技术致敬。通过将赛道极限与量产可靠性完美融合，GR GT3 定义了新的“耐力美学”。
+            </p>
+            <div class="mt-8 text-xs text-gray-600">
+                Generated based on Technical Source Report | Powered by Interactive Analysis & Gemini API
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const md = window.markdownit();
+
+        // --- 1. Navigation Logic ---
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function highlightEngineFeature(feature) {
+            // Simple visual feedback for interaction
+            console.log("Feature clicked:", feature);
+            // In a fuller app, this could open a modal or expand details
+            // For now, we rely on the hover effect in CSS
+        }
+
+        // --- 2. Torque Chart (Line) ---
+        let torqueChartInstance;
+        
+        function initTorqueChart() {
+            const ctx = document.getElementById('torqueChart').getContext('2d');
+            
+            // Data for Normal (Dip)
+            const dataNormal = [400, 450, 500, 550, 0, 0, 450, 500, 550]; 
+            // Data for Hybrid (Fill)
+            const dataHybrid = [400, 450, 500, 550, 550, 550, 550, 580, 600];
+            const labels = ['0s', '0.5s', '1.0s', '1.5s', 'Shift Start', 'Shift End', '2.5s', '3.0s', '3.5s'];
+
+            torqueChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '轮上扭矩 (Nm) - 普通 AT',
+                        data: dataNormal,
+                        borderColor: '#9ca3af', // Gray
+                        backgroundColor: 'rgba(156, 163, 175, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.1,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 700,
+                            title: { display: true, text: 'Torque (Nm)' }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y === 0 ? '动力中断 (Shift Shock)' : context.parsed.y + ' Nm';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateTorqueChart(isHybrid) {
+            const desc = document.getElementById('torque-desc');
+            const dataNormal = [400, 450, 500, 550, 20, 20, 450, 500, 550]; // Small dip for realism
+            const dataHybrid = [400, 450, 500, 550, 550, 550, 550, 580, 600]; // Flat line
+
+            if (isHybrid) {
+                torqueChartInstance.data.datasets = [{
+                    label: '轮上扭矩 (Nm) - GR Hybrid',
+                    data: dataHybrid,
+                    borderColor: '#dc2626', // Red
+                    backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.3,
+                    fill: true
+                }, {
+                   label: '电机介入 (Fill)',
+                   data: [null, null, null, null, 530, 530, null, null, null],
+                   borderColor: '#fbbf24', // Amber
+                   borderDash: [5, 5],
+                   pointRadius: 6,
+                   fill: false
+                }];
+                desc.innerHTML = `<span class="text-red-600 font-bold">GR 模式激活：</span> P2 电机在换挡间隙输出扭矩，实现无缝加速 (Zero Torque Loss)。`;
+            } else {
+                torqueChartInstance.data.datasets = [{
+                    label: '轮上扭矩 (Nm) - 普通 AT',
+                    data: dataNormal,
+                    borderColor: '#9ca3af',
+                    backgroundColor: 'rgba(156, 163, 175, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.1,
+                    fill: true
+                }];
+                desc.innerHTML = `当前展示：普通模式。注意换挡时的扭矩跌落（顿挫感）。`;
+            }
+            torqueChartInstance.update();
+        }
+
+        // --- 3. Engine Radar Chart ---
+        function initEngineChart() {
+            const ctx = document.getElementById('engineRadarChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: [
+                        '低扭 (Low-end Torque)', 
+                        '高转功率 (High RPM Power)', 
+                        '耐用性 (Durability)', 
+                        '声浪厚度 (Sound Depth)', 
+                        '震动控制 (Smoothness)'
+                    ],
+                    datasets: [{
+                        label: 'Toyota GR V8 (Cross-plane)',
+                        data: [90, 80, 95, 90, 85],
+                        fill: true,
+                        backgroundColor: 'rgba(220, 38, 38, 0.2)', // Red
+                        borderColor: '#dc2626',
+                        pointBackgroundColor: '#dc2626',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#dc2626'
+                    }, {
+                        label: 'Ferrari/McLaren V8 (Flat-plane)',
+                        data: [65, 95, 70, 60, 50],
+                        fill: true,
+                        backgroundColor: 'rgba(107, 114, 128, 0.2)', // Gray
+                        borderColor: '#6b7280',
+                        pointBackgroundColor: '#6b7280',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#6b7280'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- 4. Chassis Bar Chart ---
+        function initChassisChart() {
+            const ctx = document.getElementById('chassisBarChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['刚性/重量比', '可维修性 (赛道)', '生产成本 (低为优)', '设计自由度'],
+                    datasets: [{
+                        label: '砂芯铸造铝合金 (GR GT3)',
+                        data: [85, 90, 70, 95],
+                        backgroundColor: '#dc2626',
+                    }, {
+                        label: '碳纤维单体壳 (McLaren)',
+                        data: [95, 40, 20, 60],
+                        backgroundColor: '#374151',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y', // Horizontal Bar
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        // --- 5. Gemini AI Logic ---
+        
+        const apiKey = ""; // API Key injected by environment
+
+        function fillPrompt(text) {
+            document.getElementById('user-input').value = text;
+        }
+
+        async function askChiefEngineer() {
+            const inputField = document.getElementById('user-input');
+            const query = inputField.value.trim();
+            if (!query) return;
+
+            // 1. Add User Message to UI
+            addMessageToChat('user', query);
+            inputField.value = '';
+
+            // 2. Add Loading Indicator
+            const loadingId = addLoadingIndicator();
+
+            // 3. System Prompt setup
+            const systemPrompt = `
+                You are the Chief Engineer of the Toyota GR GT3 project. 
+                You are a world-class expert in automotive engineering, racing technology, and vehicle dynamics.
+                Your tone is professional, technical, yet accessible, like a mentor explaining to a junior engineer.
+                
+                Context about the car (GR GT3):
+                - Engine: 4.0L V8 Twin-Turbo, Hot-V layout, Cross-plane crankshaft. Focus on reliability and low-end torque over pure high RPM scream.
+                - Transmission: Rear Transaxle 8-speed AT with a P2 Hybrid Module (no torque converter). It uses a wet clutch for starting and the motor for torque filling during shifts.
+                - Chassis: Uses "Sand Core Casting" for aluminum hard points (suspension towers), mimicking organic bone structures for high rigidity. It is NOT a full carbon monocoque because aluminum is easier to repair in GT3 racing.
+                - Philosophy: "Aesthetics of Over-engineering". A car that can race 24 hours and then drive home. Reliable speed.
+
+                Instructions:
+                - Answer the user's question specifically related to these technologies.
+                - Use technical terms but explain them briefly if needed.
+                - Keep answers concise (under 150 words).
+                - ALWAYS reply in Chinese (Simplified).
+                - If the user asks something unrelated to cars/engineering, politely steer them back to the GR GT3.
+            `;
+
+            try {
+                // 4. API Call
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: query }] }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] }
+                    })
+                });
+
+                const data = await response.json();
+                
+                // Remove loader
+                document.getElementById(loadingId).remove();
+
+                // 5. Display Response
+                if (data.candidates && data.candidates[0].content) {
+                    const reply = data.candidates[0].content.parts[0].text;
+                    addMessageToChat('ai', reply);
+                } else {
+                    addMessageToChat('ai', '抱歉，我的遥测数据暂时中断了，请稍后再试。');
+                }
+
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                document.getElementById(loadingId).remove();
+                addMessageToChat('ai', '连接总控中心失败，请检查网络。');
+            }
+        }
+
+        function addMessageToChat(role, text) {
+            const historyDiv = document.getElementById('chat-history');
+            const bubble = document.createElement('div');
+            bubble.className = `chat-bubble ${role === 'user' ? 'chat-user' : 'chat-ai'}`;
+            
+            if (role === 'ai') {
+                // Parse markdown for AI responses
+                bubble.innerHTML = `<strong>👨‍🔧 首席工程师:</strong><br>${md.render(text)}`;
+            } else {
+                bubble.innerText = text;
+            }
+            
+            historyDiv.appendChild(bubble);
+            historyDiv.scrollTop = historyDiv.scrollHeight;
+        }
+
+        function addLoadingIndicator() {
+            const historyDiv = document.getElementById('chat-history');
+            const id = 'loading-' + Date.now();
+            const bubble = document.createElement('div');
+            bubble.id = id;
+            bubble.className = 'chat-bubble chat-ai flex items-center gap-1';
+            bubble.innerHTML = `
+                <div class="w-2 h-2 bg-red-400 rounded-full typing-dot"></div>
+                <div class="w-2 h-2 bg-red-400 rounded-full typing-dot"></div>
+                <div class="w-2 h-2 bg-red-400 rounded-full typing-dot"></div>
+            `;
+            historyDiv.appendChild(bubble);
+            historyDiv.scrollTop = historyDiv.scrollHeight;
+            return id;
+        }
+
+
+        // Initialize all
+        document.addEventListener('DOMContentLoaded', () => {
+            initTorqueChart();
+            initEngineChart();
+            initChassisChart();
+        });
+
+    </script>
+</body>
+</html>
